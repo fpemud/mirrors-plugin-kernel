@@ -7,7 +7,7 @@ import time
 import subprocess
 
 
-def run(self):
+def run():
     url = "http://mirrors.tuna.tsinghua.edu.cn/kernel"
     dataDir = sys.argv[1]
     logDir = sys.argv[2]
