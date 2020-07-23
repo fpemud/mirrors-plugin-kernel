@@ -2,40 +2,38 @@
 # -*- coding: utf-8; tab-width: 4; indent-tabs-mode: t -*-
 
 import sys
-import time
 import json
 import subprocess
 
 
 def main():
-    dataDir = json.loads(sys.argv[1])["storage-file"]["data-directory"]
     rsyncSource = "rsync://rsync.kernel.org/pub"
-    _Util.cmdExec("/usr/bin/rsync", "-v", "-a", "-z", "--delete", rsyncSource, dataDir)
 
+    cfg = json.loads(sys.argv[1])["config"]
+    dataDir = json.loads(sys.argv[1])["storage-file"]["data-directory"]
 
-class _Util:
+    mode = cfg.get("mode", "recent-kernel-only")
+    if mode == "full":
+        patternList = []
+    elif mode == "kernel-only":
+        patternList = [
+            "+ /kernel/v*/***",
+            "- /**",
+        ]
+    elif mode == "recent-kernel-only":
+        # FIXME: currently it is the same as "kernel-only"
+        patternList = [
+            "+ /kernel/v*/***",
+            "- /**",
+        ]
+    else:
+        raise Exception("invalid mode")
 
-    @staticmethod
-    def cmdExec(cmd, *kargs):
-        # call command to execute frontend job
-        #
-        # scenario 1, process group receives SIGTERM, SIGINT and SIGHUP:
-        #   * callee must auto-terminate, and cause no side-effect
-        #   * caller must be terminate AFTER child-process, and do neccessary finalization
-        #   * termination information should be printed by callee, not caller
-        # scenario 2, caller receives SIGTERM, SIGINT, SIGHUP:
-        #   * caller should terminate callee, wait callee to stop, do neccessary finalization, print termination information, and be terminated by signal
-        #   * callee does not need to treat this scenario specially
-        # scenario 3, callee receives SIGTERM, SIGINT, SIGHUP:
-        #   * caller detects child-process failure and do appopriate treatment
-        #   * callee should print termination information
-
-        # FIXME, the above condition is not met, FmUtil.shellExec has the same problem
-
-        ret = subprocess.run([cmd] + list(kargs), universal_newlines=True)
-        if ret.returncode > 128:
-            time.sleep(1.0)
-        ret.check_returncode()
+    cmd = "/usr/bin/rsync -v -a -z --delete --delete-excluded --partial"
+    for p in patternList:
+        cmd += "-f '%s' " % (p)
+    cmd += "%s %s" % (rsyncSource, dataDir)
+    subprocess.run(cmd, shell=True, check=True)
 
 
 ###############################################################################
