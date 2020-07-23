@@ -29,7 +29,7 @@ def main():
     else:
         raise Exception("invalid mode")
 
-    cmd = "/usr/bin/rsync -v -a -z --delete --delete-excluded --partial"
+    cmd = "/usr/bin/rsync -v -a -z --delete --delete-excluded --partial "
     for p in patternList:
         cmd += "-f '%s' " % (p)
     cmd += "%s %s" % (rsyncSource, dataDir)
