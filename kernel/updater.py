@@ -17,13 +17,19 @@ def main():
         patternList = []
     elif mode == "kernel-only":
         patternList = [
-            "+ /kernel/v*/***",
+            "+ /linux",
+            "+ /linux/kernel",
+            "+ /linux/kernel/v*",
+            "+ /linux/kernel/v*/***",
             "- /**",
         ]
     elif mode == "recent-kernel-only":
         # FIXME: currently it is the same as "kernel-only"
         patternList = [
-            "+ /kernel/v*/***",
+            "+ /linux",
+            "+ /linux/kernel",
+            "+ /linux/kernel/v*",
+            "+ /linux/kernel/v*/***",
             "- /**",
         ]
     else:
