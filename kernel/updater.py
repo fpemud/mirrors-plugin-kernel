@@ -1,12 +1,18 @@
 #!/usr/bin/python3
 # -*- coding: utf-8; tab-width: 4; indent-tabs-mode: t -*-
 
+import re
 import sys
 import json
+import urllib
+import urllib.request
+import certifi
+import lxml.html
 import subprocess
 
 
 def main():
+    url = "https://www.kernel.org"
     rsyncSource = "rsync://rsync.kernel.org/pub"
 
     cfg = json.loads(sys.argv[1])["config"]
@@ -24,14 +30,26 @@ def main():
             "- /**",
         ]
     elif mode == "recent-kernel-only":
-        # FIXME: currently it is the same as "kernel-only"
+        mainVerSet = set()
+        if True:
+            resp = urllib.request.urlopen(url, timeout=60, cafile=certifi.where())
+            root = lxml.html.parse(resp)
+            for tr in root.xpath(".//table[@id='releases']/tr"):
+                value = tr.xpath("./td")[1].xpath("./strong")[0]
+                m = re.match("([0-9]+)\\.[0-9].*", value.text)
+                if m is not None:
+                    mainVerSet.add(m.group(1))
+
         patternList = [
             "+ /linux",
             "+ /linux/kernel",
-            "+ /linux/kernel/v*",
-            "+ /linux/kernel/v*/***",
-            "- /**",
         ]
+        for v in mainVerSet:
+            patternList += [
+                "+ /linux/kernel/v%s.*" % (v),
+                "+ /linux/kernel/v%s.*/***" % (v),
+            ]
+        patternList.append("- /**")
     else:
         raise Exception("invalid mode")
 
