@@ -12,7 +12,9 @@
     </initializer>
     <updater>
       <executable>updater.py</executable>
-      <cron-expression>0 0 * * 0</cron-expression>
+      <scheduler>
+        <interval>1d</interval>
+      </scheduler>
     </updater>
   </mirror-site>
 </plugin>
