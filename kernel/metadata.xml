@@ -2,11 +2,9 @@
 <plugin id="kernel">
   <mirror-site id="kernel">
     <name>Linux Kernel Release</name>
-    <storage type="file"></storage>
-    <advertiser>
-      <interface>file:http</interface>
-      <interface>file:ftp</interface>
-    </advertiser>
+    <storage type="file"/>
+    <advertiser type="httpdir"/>
+    <advertiser type="ftp"/>
     <initializer>
       <executable>updater.py</executable>
     </initializer>
