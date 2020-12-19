@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<plugin id="kernel">
-  <mirror-site id="kernel">
-    <name>Linux Kernel Release</name>
-    <storage type="file"/>
-    <advertiser type="httpdir"/>
-    <advertiser type="ftp"/>
-    <initializer>
-      <executable>updater.py</executable>
-    </initializer>
-    <updater>
-      <executable>updater.py</executable>
-      <schedule type="interval">1d</schedule>
-    </updater>
-  </mirror-site>
-</plugin>
+<mirror-site id="kernel">
+  <name>Linux Kernel Release</name>
+  <storage type="file"/>
+  <advertiser type="httpdir"/>
+  <advertiser type="ftp"/>
+  <initializer>
+    <executable>updater.py</executable>
+  </initializer>
+  <updater>
+    <executable>updater.py</executable>
+    <schedule type="interval">1d</schedule>
+  </updater>
+</mirror-site>
