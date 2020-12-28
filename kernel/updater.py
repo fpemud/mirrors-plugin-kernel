@@ -2,21 +2,19 @@
 # -*- coding: utf-8; tab-width: 4; indent-tabs-mode: t -*-
 
 import re
-import sys
-import json
-import urllib
-import urllib.request
 import certifi
-import lxml.html
 import subprocess
+import lxml.html
+import urllib.request
+import mirrors.plugin
 
 
 def main():
     url = "https://www.kernel.org"
     rsyncSource = "rsync://rsync.kernel.org/pub"
 
-    cfg = json.loads(sys.argv[1])["config"]
-    dataDir = json.loads(sys.argv[1])["storage-file"]["data-directory"]
+    cfg = mirrors.plugin.params["config"]
+    dataDir = mirrors.plugin.params["storage-file"]["data-directory"]
 
     mode = cfg.get("mode", "recent-kernel-only")
     if mode == "full":
